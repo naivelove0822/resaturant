@@ -62,11 +62,11 @@ app.post('/restaurants', (req, res) => {
 
 // 瀏覽單一餐廳資料
 app.get('/restaurants/:id', (req, res) => {
-  const id = req.params.id 
+  const id = req.params.id
   return Restaurant.findById(id)
-   .lean()
-   .then((restaurantsData) => res.render('show', { restaurantsData: restaurantsData }))
-   .catch(err => console.log(err))
+    .lean()
+    .then((restaurantsData) => res.render('show', { restaurantsData: restaurantsData }))
+    .catch(err => console.log(err))
 })
 
 // 修改餐廳資料
@@ -79,22 +79,22 @@ app.get('/restaurants/:id/edit', (req, res) => {
 })
 
 app.post('/restaurants/:id/edit', (req, res) => {
-  const id = req.params.id 
+  const id = req.params.id
   const body = req.body
   return Restaurant.findById(id)
     .then(restaurant => {
-      restaurant.name = body.name 
+      restaurant.name = body.name
       restaurant.name_en = body.name_en
       restaurant.category = body.category
       restaurant.image = body.image
-      restaurant.location = body.location 
-      restaurant.phone = body.phone 
-      restaurant.google_map = body.google_map 
-      restaurant.rating = body.rating 
+      restaurant.location = body.location
+      restaurant.phone = body.phone
+      restaurant.google_map = body.google_map
+      restaurant.rating = body.rating
       restaurant.description = body.description
       return restaurant.save()
     })
-    .then(()=> res.redirect(`/restaurants/${id}`))
+    .then(() => res.redirect(`/restaurants/${id}`))
     .catch(err => console.log(err))
 
   // Model answer 使用put方式 將原本的:id/edit => :restaurantId , Edit.hbs內改為<form action="/restaurants/{{restaurantsData._id}}?_method=PUT"
@@ -104,6 +104,24 @@ app.post('/restaurants/:id/edit', (req, res) => {
   //   //可依照專案發展方向自定編輯後的動作，這邊是導向到瀏覽特定餐廳頁面
   //   .then(() => res.redirect(`/restaurants/${restaurantId}`))
   //   .catch(err => console.log(err))
+})
+
+// 刪除餐廳功能
+app.post('/restaurants/:id/delete', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .then(restaurant => restaurant.remove())
+    .then(() => res.redirect('/'))
+    .catch(err => console.log(err))
+
+  // Model Answer作法運用 Method=delete 在index裡改為action="/restaurants/{{this._id}}?_method=DELETE"
+  // method = "POST"
+  
+  // app.delete("/restaurants/:restaurantId", (req, res) => {
+  //   const { restaurantId } = req.params
+  //   Restaurant.findByIdAndDelete(restaurantId)
+  //     .then(() => res.redirect("/"))
+  //     .catch(err => console.log(err))
 })
 
 app.listen(port, () => {
