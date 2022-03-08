@@ -60,7 +60,15 @@ app.post('/restaurants', (req, res) => {
     .catch(err => console.log(err))
 })
 
+// 瀏覽單一餐廳資料
+app.get('/restaurants/:id', (req, res) => {
+  const id = req.params.id 
+  return Restaurant.findById(id)
+   .lean()
+   .then((restaurantsData) => res.render('show', { restaurantsData: restaurantsData }))
+})
 
+// 
 
 
 app.listen(port, () => {
