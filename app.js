@@ -66,10 +66,45 @@ app.get('/restaurants/:id', (req, res) => {
   return Restaurant.findById(id)
    .lean()
    .then((restaurantsData) => res.render('show', { restaurantsData: restaurantsData }))
+   .catch(err => console.log(err))
 })
 
-// 
+// 修改餐廳資料
+app.get('/restaurants/:id/edit', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .lean()
+    .then((restaurantsData) => res.render('edit', { restaurantsData: restaurantsData }))
+    .catch(err => console.log(err))
+})
 
+app.post('/restaurants/:id/edit', (req, res) => {
+  const id = req.params.id 
+  const body = req.body
+  return Restaurant.findById(id)
+    .then(restaurant => {
+      restaurant.name = body.name 
+      restaurant.name_en = body.name_en
+      restaurant.category = body.category
+      restaurant.image = body.image
+      restaurant.location = body.location 
+      restaurant.phone = body.phone 
+      restaurant.google_map = body.google_map 
+      restaurant.rating = body.rating 
+      restaurant.description = body.description
+      return restaurant.save()
+    })
+    .then(()=> res.redirect(`/restaurants/${id}`))
+    .catch(err => console.log(err))
+
+  // Model answer 使用put方式 將原本的:id/edit => :restaurantId , Edit.hbs內改為<form action="/restaurants/{{restaurantsData._id}}?_method=PUT"
+
+  // const { restaurantId } = req.params
+  // Restaurant.findByIdAndUpdate(restaurantId, req.body)
+  //   //可依照專案發展方向自定編輯後的動作，這邊是導向到瀏覽特定餐廳頁面
+  //   .then(() => res.redirect(`/restaurants/${restaurantId}`))
+  //   .catch(err => console.log(err))
+})
 
 app.listen(port, () => {
   console.log(`Restaurant is running on localhost:${port}`)

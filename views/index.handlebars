@@ -14,16 +14,15 @@
       </form>
       <div class="text-right">
         <a href="/restaurants/new"><button class="btn btn-primary">新增餐廳</button></a>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- restaurant list -->
-<div class="container mt-5 px-md-5">
-  <div class="row">
-    {{#each restaurantsData}}
-    <div class="col-12 col-sm-6 col-md-4">
-      <a href="/restaurant/{{this.id}}" class="text-secondary">
+  <!-- restaurant list -->
+  <div class="container mt-5 px-md-5">
+    <div class="row">
+      {{#each restaurantsData}}
+      <div class="col-12 col-sm-6 col-md-4">
         <div class="card mb-3">
           <img class="card-img-top" src="{{this.image}}" alt="{{this.name}}">
           <div class="card-body p-3">
@@ -36,12 +35,16 @@
             <span class="badge badge-pill badge-danger font-weight-normal">
               {{this.rating}}
               <i class="fas fa-star fa-xs"></i>
-              <a href="/restaurants/{{this._id}}"><button class="btn btn-link btn-sm">Details</button></a>
-              </div>
-            </span>
+              </span>
+              
+              <div>
+                <a href="/restaurants/{{this._id}}"><button class="btn btn-link btn-sm">Details</button></a>
+                <a href="/restaurants/{{this._id}}/edit"><button class="btn btn-link btn-sm">Edit</button></a>
+              </div>    
           </div>
-      </a>
+        </div>
+        </a>
+      </div>
+      {{/each}}
     </div>
-    {{/each}}
   </div>
-</div>
