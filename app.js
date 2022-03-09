@@ -33,19 +33,30 @@ app.get("/", (req, res) => {
 })
 // 搜尋功能
 app.get('/search', (req, res) => {
+  // if (!req.query.keywords) {
+  //   res.redirect("/")
+  // }
+
+  // const keywords = req.query.keywords 搜尋功能會失效
+
+
   const keyword = req.query.keyword.trim().toLowerCase()
 
   Restaurant.find()
     .lean()
     .then(restaurantsData => {
-      const filterRestaurantsData = restaurantsData.filter(
-        data =>
-          data.name.toLowerCase().includes(keyword) ||
-          data.category.includes(keyword)
-      )
-      res.render('index', { restaurantsData: filterRestaurantsData, keyword: keyword })
-    })
-    .catch(err => console.log(err))
+  const filterRestaurantsData = restaurantsData.filter(
+    data =>
+      data.name.toLowerCase().includes(keyword) ||
+      data.category.includes(keyword)
+  )
+  if (filterRestaurantsData.length === 0) {
+    res.redirect('/')
+  } else {
+    res.render('index', { restaurantsData: filterRestaurantsData, keyword: keyword })
+  }
+})
+  .catch(err => console.log(err))
 })
 
 // 新增餐廳功能
@@ -116,7 +127,7 @@ app.post('/restaurants/:id/delete', (req, res) => {
 
   // Model Answer作法運用 Method=delete 在index裡改為action="/restaurants/{{this._id}}?_method=DELETE"
   // method = "POST"
-  
+
   // app.delete("/restaurants/:restaurantId", (req, res) => {
   //   const { restaurantId } = req.params
   //   Restaurant.findByIdAndDelete(restaurantId)
