@@ -1,4 +1,5 @@
 const express = require('express')
+const session = require('express-session')
 const app = express()
 const port = 3000
 const exphbs = require('express-handlebars')
@@ -10,6 +11,12 @@ const routes = require('./routes')
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
+
+app.use(session({
+  secret: 'Restaurant',
+  resave: false,
+  saveUninitialized: true
+}))
 
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extende: true }))
