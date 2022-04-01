@@ -25,7 +25,7 @@ router.post('/register', (req, res) => {
     errors.push({ message: '所有欄位都是必填!' })
   }
   if (password !== confirmPassword) {
-    errors.push({ message: '密碼與確認密碼不符'})
+    errors.push({ message: '密碼與確認密碼不符' })
   }
   if (errors.length) {
     return res.render('register', {
@@ -39,7 +39,7 @@ router.post('/register', (req, res) => {
   //檢查是否註冊過
   User.findOne({ email }).then(user => {
     if (user) {
-      console.log('User already exists')
+      req.flash('warning_msg', '此Email已註冊過。')
       res.render('register', {
         name,
         email,
@@ -53,11 +53,11 @@ router.post('/register', (req, res) => {
         email,
         password
       })
-      .then(() => res.redirect('/'))
-      .catch((err) => console.log(err))
+        .then(() => res.redirect('/'))
+        .catch((err) => console.log(err))
     }
   })
-  .catch((err) => console.log(err))
+    .catch((err) => console.log(err))
 })
 
 router.get('/logout', (req, res) => {
