@@ -9,16 +9,20 @@ router.get('/new', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-  // 拿出全部資料所以使用req.body
-  return Restaurant.create(req.body)
+  // 區分個人頁面
+  const userId = req.user._id
+  const { name, name_en, category, image, location, phone, google_map, rating, description } = req.body
+  // 拿出全部資料本來用req.body => 全部有需要的資料都需要打出來 && 思考可以包在一起的做法
+  return Restaurant.create({ name, name_en, category, image, location, phone, google_map, rating, description, userId })
     .then(() => res.redirect('/'))
     .catch(err => console.log(err))
 })
 
 // 瀏覽單一餐廳資料
 router.get('/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({ _id, userId })
     .lean()
     .then((restaurantsData) => res.render('show', { restaurantsData: restaurantsData }))
     .catch(err => console.log(err))
@@ -26,17 +30,19 @@ router.get('/:id', (req, res) => {
 
 // 修改餐廳資料
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({ _id, userId })
     .lean()
     .then((restaurantsData) => res.render('edit', { restaurantsData: restaurantsData }))
     .catch(err => console.log(err))
 })
 
 router.put('/:id', (req, res) => {
-  const id = req.params.id
+  const userId = req.user._id
+  const _id = req.params.id
   const body = req.body
-  return Restaurant.findById(id)
+  return Restaurant.findOne({ _id, userId })
     .then(restaurant => {
       restaurant.name = body.name
       restaurant.name_en = body.name_en
@@ -49,7 +55,7 @@ router.put('/:id', (req, res) => {
       restaurant.description = body.description
       return restaurant.save()
     })
-    .then(() => res.redirect(`/restaurants/${id}`))
+    .then(() => res.redirect(`/restaurants/${_id}`)) //這裡要改成_id才能根據使用者對應資料庫
     .catch(err => console.log(err))
 
   // Model answer 
@@ -62,8 +68,9 @@ router.put('/:id', (req, res) => {
 
 // 刪除餐廳功能
 router.delete('/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({ _id, userId })
     .then(restaurant => restaurant.remove())
     .then(() => res.redirect('/'))
     .catch(err => console.log(err))

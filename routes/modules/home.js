@@ -4,9 +4,11 @@ const router = express.Router()
 const Restaurant = require('../../models/Restaurant')
 
 // 首頁瀏覽全部餐廳
-router.get("/", (req, res) => {
-  Restaurant.find()
+router.get('/', (req, res) => {
+  const userId = req.user._id
+  Restaurant.find({ userId })
     .lean()
+    .sort({ _id: 'asc' })
     .then(restaurantsData => res.render("index", { restaurantsData }))
     .catch(err => console.log(err))
 })
