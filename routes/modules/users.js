@@ -9,6 +9,7 @@ router.get('/login', (req, res) => {
 
 router.post('/login', passport.authenticate('local', {
   successRedirect: '/',
+  failureFlash: true,
   failureRedirect: '/users/login'
 }))
 
@@ -19,6 +20,22 @@ router.get('/register', (req, res) => {
 router.post('/register', (req, res) => {
   //取得表單參數
   const { name, email, password, confirmPassword } = req.body
+  const errors = []
+  if (!name || !email || !password || !confirmPassword) {
+    errors.push({ message: '所有欄位都是必填!' })
+  }
+  if (password !== confirmPassword) {
+    errors.push({ message: '密碼與確認密碼不符'})
+  }
+  if (errors.length) {
+    return res.render('register', {
+      errors,
+      name,
+      email,
+      password,
+      confirmPassword
+    })
+  }
   //檢查是否註冊過
   User.findOne({ email }).then(user => {
     if (user) {
@@ -45,6 +62,7 @@ router.post('/register', (req, res) => {
 
 router.get('/logout', (req, res) => {
   req.logout() // passport提供的函式，清除session。
+  req.flash('success_msg', '你已經成功登出。')
   res.redirect('/users/login')
 })
 
