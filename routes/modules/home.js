@@ -14,10 +14,10 @@ router.get('/', (req, res) => {
 })
 // 搜尋功能
 router.get('/search', (req, res) => {
-  
+  const userId = req.user._id
   const keyword = req.query.keyword.trim().toLowerCase()
 
-  Restaurant.find()
+  Restaurant.find({ userId })
     .lean()
     .then(restaurantsData => {
       const filterRestaurantsData = restaurantsData.filter(
