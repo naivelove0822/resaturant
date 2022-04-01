@@ -12,13 +12,7 @@ router.get("/", (req, res) => {
 })
 // 搜尋功能
 router.get('/search', (req, res) => {
-  // if (!req.query.keywords) {
-  //   res.redirect("/")
-  // }
-
-  // const keywords = req.query.keywords 搜尋功能會失效
-
-
+  
   const keyword = req.query.keyword.trim().toLowerCase()
 
   Restaurant.find()
