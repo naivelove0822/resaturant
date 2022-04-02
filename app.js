@@ -2,21 +2,25 @@ const express = require('express')
 const session = require('express-session')
 const usePassport = require('./config/passport')
 
-const app = express()
-const port = 3000
-
 const exphbs = require('express-handlebars')
 const Restaurant = require('./models/Restaurant')
 const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 const flash = require('connect-flash')
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
+const app = express()
+const PORT = process.env.PORT
+
 const routes = require('./routes')
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
 
 app.use(session({
-  secret: 'Restaurant',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }))
@@ -42,6 +46,6 @@ app.use(routes)
 require('./config/mongoose')
 
 
-app.listen(port, () => {
-  console.log(`Restaurant is running on localhost:${port}`)
+app.listen(PORT, () => {
+  console.log(`Restaurant is running on localhost:${PORT}`)
 })
