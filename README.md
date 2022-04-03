@@ -19,16 +19,25 @@
 
 1. 終端機需安裝 Node.js & npm 
 2. clone專案至本地
-3. 專案開啟後於，終端機輸入: npm install ，安裝package.json
-4. 安裝完成後，輸入 npm run start
-5. 看見以下訊息，表示順利運行，在瀏覽器輸入: localhost:3000 進入 
-
+3. 專案開啟後於，需於終端機輸入以下指令，輸入完後，安裝package.json
+```bash
+npm install
+```
+4. npm安裝完成後若有需要腳本資料，請於終端機輸入以下指令
+```bash
+npm run seed
+```
+5. 若需要將程式啟動，請於終端機輸入以下指令
+```bash
+ npm run start
+```
+6. 看見以下訊息，表示順利運行，在瀏覽器輸入: localhost:3000 進入 
 
 ```bash
 Restaurant is running on localhost:3000 
 ```
 
-6. 若要退出
+7. 若要退出
 ```bash
 ctrl + c 
 ```
